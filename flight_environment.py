@@ -55,6 +55,50 @@ class FlightEnvironment:
 
         return np.vstack(cylinders)
     
+    def plot_cylinders_traj(self, traj):
+        """
+        在 3D 中显示圆柱障碍 + 平滑后的连续轨迹（traj）。
+        traj: (M, 3) array-like
+        """
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        cylinders = self.cylinders
+        space_size = self.space_size
+
+        # 画圆柱
+        Xmax, Ymax, Zmax = space_size
+        for cx, cy, h, r in cylinders:
+            z = np.linspace(0, h, 30)
+            theta = np.linspace(0, 2 * np.pi, 30)
+            theta, z = np.meshgrid(theta, z)
+
+            x = cx + r * np.cos(theta)
+            y = cy + r * np.sin(theta)
+
+            ax.plot_surface(x, y, z, alpha=0.8)
+            theta2 = np.linspace(0, 2*np.pi, 30)
+            x_top = cx + r * np.cos(theta2)
+            y_top = cy + r * np.sin(theta2)
+            z_top = np.ones_like(theta2) * h
+            ax.plot_trisurf(x_top, y_top, z_top, alpha=0.8)
+
+        ax.set_xlim(0, self.env_width)
+        ax.set_ylim(0, self.env_length)
+        ax.set_zlim(0, self.env_height)
+
+        # 画平滑轨迹
+        traj = np.array(traj)
+        tx, ty, tz = traj[:, 0], traj[:, 1], traj[:, 2]
+        ax.plot(tx, ty, tz, linewidth=2)
+
+        self.set_axes_equal(ax)
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.set_zlabel("Z")
+        ax.set_title("3D Environment with Smooth Trajectory")
+        plt.show()
+
 
     def is_outside(self,point):
         """
@@ -150,6 +194,7 @@ class FlightEnvironment:
             ax.scatter(xs[0], ys[0], zs[0], s=40) 
             ax.scatter(xs[-1], ys[-1], zs[-1], s=40) 
         self.set_axes_equal(ax)
+        ax.set_title("3D Environment with Discrete Path")
         plt.show()
 
 

@@ -1,4 +1,6 @@
 from flight_environment import FlightEnvironment
+from path_planner import PathPlanner
+from trajectory_generator import TrajectoryGenerator
 
 env = FlightEnvironment(50)
 start = (1,2,0)
@@ -13,7 +15,8 @@ goal = (18,18,3)
 #   - column 3 contains the z-coordinates of all path points
 # This `path` array will be provided to the `env` object for visualization.
 
-path = [[0,0,0],[1,1,1],[2,2,2],[3,3,3]]
+planner = PathPlanner(env, resolution=0.5)  # resolution 可以改成 0.25 之类
+path = planner.plan(start, goal)
 
 # --------------------------------------------------------------------------------------------------- #
 
@@ -34,7 +37,15 @@ env.plot_cylinders(path)
 #   points on the same figure to clearly show how the continuous trajectory
 #   follows these path points.
 
+# ------------------ 2) 轨迹生成（平滑） ------------------ #
+traj_gen = TrajectoryGenerator()
+t, traj = traj_gen.generate_trajectory(path, total_time=10.0, samples_per_segment=30)
 
+# 3D 图 2：环境 + 平滑后轨迹（不再显示离散 path）
+env.plot_cylinders_traj(traj)
+
+# 画 x(t), y(t), z(t)，并叠加离散路径点
+traj_gen.plot_trajectory(t, traj, path)
 
 
 # --------------------------------------------------------------------------------------------------- #
