@@ -97,6 +97,7 @@ class FlightEnvironment:
         ax.set_ylabel("Y")
         ax.set_zlabel("Z")
         ax.set_title("3D Environment with Smooth Trajectory")
+        plt.savefig("./cylinder_traj.png")    
         plt.show()
 
 
@@ -195,6 +196,7 @@ class FlightEnvironment:
             ax.scatter(xs[-1], ys[-1], zs[-1], s=40) 
         self.set_axes_equal(ax)
         ax.set_title("3D Environment with Discrete Path")
+        plt.savefig("./cylinder.png")
         plt.show()
 
 

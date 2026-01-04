@@ -173,4 +173,6 @@ class TrajectoryGenerator:
         axs[2].grid(True)
 
         plt.tight_layout()
+        plt.savefig("./trajectory.jpg")
         plt.show()
+
